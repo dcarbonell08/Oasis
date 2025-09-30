@@ -85,7 +85,7 @@ include(FetchContent)
 FetchContent_Declare(
     Oasis
     GIT_REPOSITORY https://github.com/open-algebra/Oasis.git
-    GIT_TAG main  # Replace "main" with a specific tag or commit for stability
+    GIT_TAG master  # Replace "master" with a specific tag or commit for stability
 )
 
 # Optional: Enable I/O or other OASIS modules
@@ -97,7 +97,7 @@ FetchContent_MakeAvailable(Oasis)
 add_executable(MyApp main.cpp)
 
 # Link OASIS library
-target_link_libraries(MyApp PRIVATE Oasis::Oasis)
+target_link_libraries(MyApp PRIVATE Oasis::Oasis Oasis::IO)
 
 # Optional: Link I/O or other OASIS modules
 # target_link_libraries(MyApp PRIVATE Oasis::IO)
@@ -111,15 +111,18 @@ target_link_libraries(MyApp PRIVATE Oasis::Oasis)
 
 #include <Oasis/Add.hpp>
 #include <Oasis/Real.hpp>
+#include <Oasis/InFixSerializer.hpp>
 
 int main() {
     Oasis::Add sum {
         Oasis::Real{2.0},
-        Oasis::Real{3.0}
+        Oasis::Real{5.0}
     };
 
+    Oasis::InFixSerializer result;
+
     auto simplified = sum.Simplify();
-    std::println("Result: {}", simplified->ToString());
+    std::println("Result: {}", simplified->Accept(result).value());
 
     return EXIT_SUCCESS;
 }
