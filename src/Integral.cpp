@@ -33,6 +33,10 @@ auto Integral<Expression>::Simplify(const Expression& upper, const Expression& l
     auto simplifiedDifferential = leastSigOp ? leastSigOp->Simplify() : nullptr;
 
     return simplifiedIntegrand->IntegrateWithBounds(*simplifiedDifferential, upper, lower);
+
+    /*
+        This function should not be used. Refer to DefiniteIntegral.cpp for the most up to date development.
+    */
     /*
         Integral simplifiedIntegrate { *simplifiedIntegrand, *simplifiedDifferential };
 

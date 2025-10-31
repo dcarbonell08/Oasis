@@ -6,7 +6,6 @@
 #define OASIS_SERIALIZATION_HPP
 
 #include "Expression.hpp"
-
 namespace Oasis {
 
 class Real;
@@ -47,6 +46,9 @@ class Derivative;
 template <IExpression Integrand, IExpression Differential>
 class Integral;
 
+template <IExpression Integrand, IExpression Differential, IExpression Upper, IExpression Lower>
+class DefiniteIntegral;
+
 class Visitor {
 public:
     virtual any Visit(const Real& real) = 0;
@@ -66,6 +68,7 @@ public:
     virtual any Visit(const Magnitude<Expression>& magnitude) = 0;
     virtual any Visit(const Derivative<Expression, Expression>& derivative) = 0;
     virtual any Visit(const Integral<Expression, Expression>& integral) = 0;
+    virtual any Visit(const DefiniteIntegral<Expression, Expression, Expression, Expression>& definiteIntegral) = 0;
 
     virtual ~Visitor() = default;
 };
@@ -92,6 +95,7 @@ public:
     auto Visit(const Magnitude<Expression>& magnitude) -> any final { return TypedVisit(magnitude); }
     auto Visit(const Derivative<Expression, Expression>& derivative) -> any final { return TypedVisit(derivative); }
     auto Visit(const Integral<Expression, Expression>& integral) -> any final { return TypedVisit(integral); }
+    auto Visit(const DefiniteIntegral<Expression, Expression, Expression, Expression>& definiteIntegral) -> any final { return TypedVisit(definiteIntegral); }
 
 protected:
     virtual auto TypedVisit(const Real& real) -> RetT = 0;
@@ -111,6 +115,7 @@ protected:
     virtual auto TypedVisit(const Magnitude<Expression>& magnitude) -> RetT = 0;
     virtual auto TypedVisit(const Derivative<Expression, Expression>& derivative) -> RetT = 0;
     virtual auto TypedVisit(const Integral<Expression, Expression>& integral) -> RetT = 0;
+    virtual auto TypedVisit(const DefiniteIntegral<Expression, Expression, Expression, Expression>& definiteIntegral) -> RetT = 0;
 };
 
 }

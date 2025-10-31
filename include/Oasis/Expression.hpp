@@ -31,6 +31,7 @@ enum class ExpressionType {
     Exponent,
     Log,
     Integral,
+    DefiniteIntegral,
     Limit,
     Derivative,
     Negate,

@@ -9,9 +9,8 @@
 
 
 namespace Oasis {
-    
     /**
-     * Integral<Expression>::IntegrateWithBounds(const Expression& integrand, const Expression& differential, const Expression& upper, const Expression& lower) const -> std::unique_ptr<Expression>
+     * DefiniteIntegral<Expression>::IntegrateWithBounds(const Expression& integrand, const Expression& differential, const Expression& upper, const Expression& lower) const -> std::unique_ptr<Expression>
      * -------------------
      * Evaluates an expression into its integral then evaluates the integral based on its bounds.
      * 
@@ -40,8 +39,15 @@ namespace Oasis {
      * 
      * auto answer = in.Simplify();
      * std::println("Result of definite integral: {}", answer->Accept(result).value());
+     * 
+     * Notes:
+     * ------
+     * C is a reserved value and should not be passed into the function as a variable. It is used as the constant C in integration.
      */
-    Integral<Expression>::IntegrateWithBounds(const Expression& integrand, const Expression& differential, const Expression& upper, const Expression& lower) const -> std::unique_ptr<Expression>
+
+    // DefiniteIntegral<Expression>::DefiniteIntegral(const Expression& integrand, const Expression& differential, const Expression& upper, const Expression& lower) {};
+
+    auto DefiniteIntegral<Expression>::IntegrateWithBounds(const Expression integrand, const Expression differential, const Expression upper, const Expression lower) const -> std::unique_ptr<Expression>
     {
         /*
         Dependencies:
@@ -78,3 +84,6 @@ namespace Oasis {
        return answer;
     }
 } // Oasis
+
+/* Need to include Visitor overloaded functions */
+/* Need to overload TypedVisit functions */
