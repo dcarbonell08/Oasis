@@ -4,11 +4,42 @@
 //
 
 #include "Oasis/DefiniteIntegral.hpp"
+//#include "Oasis/BoundedBinaryExpression.hpp"
 #include "Oasis/Integral.hpp"
 #include "Oasis/Subtract.hpp"
+#include "Oasis/InFixSerializer.hpp"
 
 
 namespace Oasis {
+
+    DefiniteIntegral<Expression>::DefiniteIntegral(const Expression& integrand, const Expression& differential, const Expression& upper, const Expression& lower)
+    // : BoundedBinaryExpression(integrand, differential, lower, upper)
+    {
+        Oasis::Integral in {
+            integrand,
+            differential
+        };
+        auto u = upper;
+        auto l = lower;
+    }
+
+    auto DefiniteIntegral<Expression>::Simplify() const -> std::unique_ptr<Expression>
+    {
+        auto up = in.Simplify();
+        auto lo = in.Simplify();
+
+        auto upperBound = up->Substitute(differential, u);
+        auto lowerBound = lo->Substitute(differential, l);
+
+        Oasis::Subtract finalVal {
+            *upperBound,
+            *lowerBound
+        }
+
+        auto resultant = finalVal;
+
+        return resultant;
+    }
     /**
      * DefiniteIntegral<Expression>::IntegrateWithBounds(const Expression& integrand, const Expression& differential, const Expression& upper, const Expression& lower) const -> std::unique_ptr<Expression>
      * -------------------
@@ -44,46 +75,8 @@ namespace Oasis {
      * ------
      * C is a reserved value and should not be passed into the function as a variable. It is used as the constant C in integration.
      */
-
-    // DefiniteIntegral<Expression>::DefiniteIntegral(const Expression& integrand, const Expression& differential, const Expression& upper, const Expression& lower) {};
-
-    auto DefiniteIntegral<Expression>::IntegrateWithBounds(const Expression integrand, const Expression differential, const Expression upper, const Expression lower) const -> std::unique_ptr<Expression>
-    {
-        /*
-        Dependencies:
-            Oasis::Integral
-            Oasis::Subtract
-            Simplify Method
-        */
-
-        // Call indefinite integral to evaluate.
-        Oasis::Integral interm {
-            *integrand,
-            *differential
-        };
-
-        /*
-            Currently evaluates the integral twice.
-            Need to look into way how to integrate only once and
-            copy values over.
-        */
-        auto upperBound = interm.Simplify();
-        auto lowerBound = interm.Simplify();
-
-        // Substitute upper and lower bounds into evaluated integrals.
-        auto subUpperBound = upperBound->Substitute(differential, upper);
-        auto subLowerBound = lowerBound->Substitute(differential, lower);
-
-        // Subtract the upper bounds and lower bounds.
-        Oasis::Subtract answer {
-            *subUpperBound,
-            *subLowerBound
-        };
-
-       // Return answer
-       return answer;
-    }
 } // Oasis
 
 /* Need to include Visitor overloaded functions */
 /* Need to overload TypedVisit functions */
+

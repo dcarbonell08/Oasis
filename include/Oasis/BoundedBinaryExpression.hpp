@@ -36,11 +36,13 @@ public:
         SetLeastSigOp(leastSigOp);
     }
 
+    //BoundedBinaryExpression(const ExpressionT)
+
     [[nodiscard]] auto Copy() const -> std::unique_ptr<Expression> final
     {
         return std::make_unique<DerivedSpecialized>(*static_cast<const DerivedSpecialized*>(this));
     }
-
+    /*
     auto Copy(tf::Subflow& subflow) const -> std::unique_ptr<Expression> final
     {
         DerivedSpecialized copy;
@@ -60,7 +62,7 @@ public:
         subflow.join();
 
         return std::make_unique<DerivedSpecialized>(copy);
-    }
+    }*/
     [[nodiscard]] auto Differentiate(const Expression& differentiationVariable) const -> std::unique_ptr<Expression> override
     {
         return Generalize()->Differentiate(differentiationVariable);
@@ -132,7 +134,7 @@ public:
 
         return std::make_unique<DerivedGeneralized>(generalized);
     }
-
+    /*
     auto Generalize(tf::Subflow& subflow) const -> std::unique_ptr<Expression> final
     {
         DerivedGeneralized generalized;
@@ -152,13 +154,13 @@ public:
         subflow.join();
 
         return std::make_unique<DerivedGeneralized>(generalized);
-    }
+    }*/
 
     [[nodiscard]] auto Simplify() const -> std::unique_ptr<Expression> override
     {
         return Generalize()->Simplify();
     }
-
+    /*
     auto Simplify(tf::Subflow& subflow) const -> std::unique_ptr<Expression> override
     {
         std::unique_ptr<Expression> generalized, simplified;
@@ -175,7 +177,7 @@ public:
         subflow.join();
 
         return simplified;
-    }
+    }*/
 
     [[nodiscard]] auto StructurallyEquivalent(const Expression& other) const -> bool final
     {
@@ -205,6 +207,7 @@ public:
         return true;
     }
 
+    /*
     auto StructurallyEquivalent(const Expression& other, tf::Subflow& subflow) const -> bool final
     {
         if (this->GetType() != other.GetType()) {
@@ -242,7 +245,7 @@ public:
         subflow.join();
 
         return mostSigOpEquivalent && leastSigOpEquivalent;
-    }
+    }*/
 
     /**
      * Flattens this expression.
@@ -383,11 +386,20 @@ public:
 
     auto operator=(const BoundedBinaryExpression& other) -> BoundedBinaryExpression& = default;
 
+    /*
     void Serialize(SerializationVisitor& visitor) const override
     {
         const auto generalized = Generalize();
         const auto& derivedGeneralized = dynamic_cast<const DerivedGeneralized&>(*generalized);
         visitor.Serialize(derivedGeneralized);
+    }
+    */
+
+    auto AcceptInternal(Visitor& visitor) const -> any override
+    {
+        const auto generalized = Generalize();
+        const auto& derivedGeneralized = dynamic_cast<const DerivedGeneralized&>(*generalized);
+        return visitor.Visit(derivedGeneralized);
     }
 
 private:
