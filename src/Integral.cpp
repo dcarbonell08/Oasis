@@ -10,6 +10,36 @@
 
 namespace Oasis {
 
+/** 
+ * Integral<Expression> class.
+ * The Integral class represents an unbound (indefinite) integral within the OASIS application.
+ * 
+ * Parameters:
+ * ----------
+ * integrand - The expression in which to integrate.
+ * differential - The variable in which to integrate the expression by.
+ * 
+ * Example Usage:
+ * --------------
+ * std::string exp = {"3x^2+4x+5"};
+ * 
+ *  const auto preproc = Oasis::PreProcessInFix(exp);
+ *  auto midResult = Oasis::FromInFix(preproc);
+ * 
+ *  const std::unique_ptr<Oasis::Expression> expression = std::move(midResult).value();
+ * 
+ *  Oasis::Integral in {
+ *      *expression,
+ *     Oasis::Variable{"x"}
+ *  };
+ *  Oasis::InFixSerializer result;
+ * 
+ *  auto answer = in.Simplify();
+ * 
+ *  std::println("Result: {}", answer->Accept(result).value());
+ *  
+ *  // Prints "Result: x^3+2x^2+5x+C"
+*/
 Integral<Expression>::Integral(const Expression& integrand, const Expression& differential)
     : BinaryExpression(integrand, differential)
 {

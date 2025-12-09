@@ -17,6 +17,90 @@
 
 namespace Oasis {
 
+/**
+ * Oasis::Add
+ * ----------
+ * Represents a class of a binary expression to add together. The class only accepts two
+ * and only two components during its construction.
+ * 
+ * Example usages:
+ * ---------------
+ * 
+ * The class is able to add two values together:
+ * 
+ * Oasis::Add myAdditionSimple {
+ *      Oasis::Real{4},
+ *      Oasis::Real{4},
+ *  };
+ *  Oasis::InFixSerializer result;
+ *
+ *    auto resultant = myAdditionSimple.Simplify();
+ * 
+ *  std::println("Result of addition: {}", resultant->Accept(result).value());
+ *  // Will print 8
+ *
+ * 
+ * ================
+ * The class is able to add a value and a variable, or two variables together,
+ * whether they are the same variable or not:
+ * 
+    Oasis::Add myAddition {
+        Oasis::Variable{"x"},
+        Oasis::Real{4}
+    };
+    //Oasis::InFixSerializer result;
+
+    resultant = myAddition.Simplify();
+
+    std::println("Result of addition: {}", resultant->Accept(result).value());
+    // Will print x+4
+
+    Oasis::Add myAdditionX {
+        Oasis::Variable{"x"},
+        Oasis::Variable{"x"}
+    };
+
+    resultant = myAdditionX.Simplify();
+
+    std::println("Result of addition: {}", resultant->Accept(result).value());
+    // Will print 2*x
+
+    Oasis::Add myAdditionXY {
+        Oasis::Variable{"x"},
+        Oasis::Variable{"y"}
+    };
+
+    resultant = myAdditionXY.Simplify();
+
+    std::println("Result of addition: {}", resultant->Accept(result).value());
+    // Will print x+y
+
+ * ================
+ * While the Add class does not support addition operations with more than two components,
+ * a workaround is below:
+ * 
+ * std::string exp = {"x+5"};
+
+    const auto preproc = Oasis::PreProcessInFix(exp);
+    auto midResult = Oasis::FromInFix(preproc);
+
+    const std::unique_ptr<Oasis::Expression> expression = std::move(midResult).value();
+
+    Oasis::Add multiAddition {
+        *expression,
+        Oasis::Real{ 5 }
+    };
+
+    resultant = multiAddition.Simplify();
+
+    std::println("Result of addition: {}", resultant->Accept(result).value());
+    // will print x+10
+ *  
+ * 
+ * The above uses a other OASIS components to convert a stringified version of another expression
+ * and feeds it into the Add class. The final multiAddition object will evaluate correctly.
+ */
+
 auto Add<Expression>::Simplify() const -> std::unique_ptr<Expression>
 {
     auto simplifiedAugend = mostSigOp ? mostSigOp->Simplify() : nullptr;
