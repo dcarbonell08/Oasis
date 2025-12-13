@@ -19,26 +19,26 @@ TEST_CASE("Integrate Nonzero number, Bounds 5 and 2", "[Integrate][Real][Nonzero
     /*
         Base case: 5
     */
-   //Oasis::Real exp{ 2.0f };
+    Oasis::Real exp{ 2.0f };
 
 
     /*
         Integral should be: 5x + C
     Final results should be: 15
     */
-   // Oasis::DefiniteIntegral in {
-    //    exp,
-    //    Oasis::Variable{"x"},
-    //    Oasis::Real{ 5 },
-    //    Oasis::Real{ 2 }
-    //};
+    Oasis::DefiniteIntegral in {
+        exp,
+        Oasis::Variable{"x"},
+        Oasis::Real{ 5 },
+        Oasis::Real{ 2 }
+    };
 
-    //Oasis::Variable var{"x"};
+    Oasis::Variable var{"x"};
 
-    //Oasis::Real result{ 15.0 };
+    Oasis::Real result{ 15.0 };
 
-    //auto defIntegrated = in.IntegrateWithBounds(in, var, 5, 2);
-   // REQUIRE(result.Equals(*defIntegrated));
+    auto defIntegrated = in.IntegrateWithBounds(in, var, 5, 2);
+    REQUIRE(result.Equals(*defIntegrated));
 }
 
 TEST_CASE("Integrate Nonzero number, Bounds 10 and 5", "[Integrate][Real][Nonzero]")
